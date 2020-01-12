@@ -50,14 +50,18 @@ namespace Xamarin.Forms.Platform.iOS
 			// based on the ContentSize so we just update the positions if the ContentSize has changed
 			if (_footerUIView != null)
 			{
+				var emptyView = CollectionView.ViewWithTag(EmptyTag);
+
 				if (IsHorizontal)
 				{
-					if (_footerUIView.Frame.X != ItemsViewLayout.CollectionViewContentSize.Width)
+					if (_footerUIView.Frame.X != ItemsViewLayout.CollectionViewContentSize.Width ||
+						_footerUIView.Frame.X < emptyView?.Frame.X)
 						UpdateHeaderFooterPosition();
 				}
 				else
 				{
-					if (_footerUIView.Frame.Y != ItemsViewLayout.CollectionViewContentSize.Height)
+					if (_footerUIView.Frame.Y != ItemsViewLayout.CollectionViewContentSize.Height ||
+						_footerUIView.Frame.Y < emptyView?.Frame.Y)
 						UpdateHeaderFooterPosition();
 				}
 			}
@@ -65,32 +69,67 @@ namespace Xamarin.Forms.Platform.iOS
 
 		internal void UpdateFooterView()
 		{
-			UpdateSubview(ItemsView?.Footer, ItemsView?.FooterTemplate, 
+			UpdateSubview(ItemsView?.Footer, ItemsView?.FooterTemplate, FooterTag,
 				ref _footerUIView, ref _footerViewFormsElement);
 			UpdateHeaderFooterPosition();
 		}
 
 		internal void UpdateHeaderView()
 		{
-			UpdateSubview(ItemsView?.Header, ItemsView?.HeaderTemplate, 
+			UpdateSubview(ItemsView?.Header, ItemsView?.HeaderTemplate, HeaderTag,
 				ref _headerUIView, ref _headerViewFormsElement);
 			UpdateHeaderFooterPosition();
 		}
 
+		internal void UpdateSubview(object view, DataTemplate viewTemplate, nint viewTag, ref UIView uiView, ref VisualElement formsElement)
+		{
+			uiView?.RemoveFromSuperview();
+
+			if (formsElement != null)
+			{
+				ItemsView.RemoveLogicalChild(formsElement);
+				formsElement.MeasureInvalidated -= OnFormsElementMeasureInvalidated;
+			}
+
+			UpdateView(view, viewTemplate, ref uiView, ref formsElement);
+
+			if (uiView != null)
+			{
+				uiView.Tag = viewTag;
+				CollectionView.AddSubview(uiView);
+			}
+
+			if (formsElement != null)
+				ItemsView.AddLogicalChild(formsElement);
+
+			if (formsElement != null)
+			{
+				RemeasureLayout(formsElement);
+				formsElement.MeasureInvalidated += OnFormsElementMeasureInvalidated;
+			}
+			else if (uiView != null)
+			{
+				uiView.SizeToFit();
+			}
+		}
+
 		void UpdateHeaderFooterPosition()
 		{
+			var emptyView = CollectionView.ViewWithTag(EmptyTag);
+
 			if (IsHorizontal)
 			{
 				var currentInset = CollectionView.ContentInset;
 
 				nfloat headerWidth = _headerUIView?.Frame.Width ?? 0f;
 				nfloat footerWidth = _footerUIView?.Frame.Width ?? 0f;
+				nfloat emptyWidth = emptyView?.Frame.Width ?? 0f;
 
 				if (_headerUIView != null && _headerUIView.Frame.X != headerWidth)
 					_headerUIView.Frame = new CoreGraphics.CGRect(-headerWidth, 0, headerWidth, CollectionView.Frame.Height);
 
-				if (_footerUIView != null && (_footerUIView.Frame.X != ItemsViewLayout.CollectionViewContentSize.Width))
-					_footerUIView.Frame = new CoreGraphics.CGRect(ItemsViewLayout.CollectionViewContentSize.Width, 0, footerWidth, CollectionView.Frame.Height);
+				if (_footerUIView != null && (_footerUIView.Frame.X != ItemsViewLayout.CollectionViewContentSize.Width || emptyWidth > 0))
+					_footerUIView.Frame = new CoreGraphics.CGRect(ItemsViewLayout.CollectionViewContentSize.Width + emptyWidth, 0, footerWidth, CollectionView.Frame.Height);
 
 				if (CollectionView.ContentInset.Left != headerWidth || CollectionView.ContentInset.Right != footerWidth)
 				{
@@ -112,6 +151,7 @@ namespace Xamarin.Forms.Platform.iOS
 				var currentInset = CollectionView.ContentInset;
 				nfloat headerHeight = _headerUIView?.Frame.Height ?? 0f;
 				nfloat footerHeight = _footerUIView?.Frame.Height ?? 0f;
+				nfloat emptyHeight = emptyView?.Frame.Height ?? 0f;
 
 				if (CollectionView.ContentInset.Top != headerHeight || CollectionView.ContentInset.Bottom != footerHeight)
 				{
@@ -134,9 +174,9 @@ namespace Xamarin.Forms.Platform.iOS
 					_headerUIView.Frame = new CoreGraphics.CGRect(0, -headerHeight, CollectionView.Frame.Width, headerHeight);
 				}
 
-				if (_footerUIView != null && (_footerUIView.Frame.Y != ItemsViewLayout.CollectionViewContentSize.Height))
+				if (_footerUIView != null && (_footerUIView.Frame.Y != ItemsViewLayout.CollectionViewContentSize.Height || emptyHeight > 0))
 				{
-					_footerUIView.Frame = new CoreGraphics.CGRect(0, ItemsViewLayout.CollectionViewContentSize.Height, CollectionView.Frame.Width, footerHeight);
+					_footerUIView.Frame = new CoreGraphics.CGRect(0, ItemsViewLayout.CollectionViewContentSize.Height + emptyHeight, CollectionView.Frame.Width, footerHeight);
 				}
 			}
 		}
