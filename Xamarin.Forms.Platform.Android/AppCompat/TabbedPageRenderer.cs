@@ -20,6 +20,7 @@ using AMenu = Android.Views.Menu;
 using AColor = Android.Graphics.Color;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Android.Support.Design.BottomNavigation;
 
 namespace Xamarin.Forms.Platform.Android.AppCompat
 {
@@ -660,8 +661,30 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				_bottomNavigationView,
 				Context);
 
+			SetBottomItemsLabeling();
+
 			if (Element.CurrentPage == null && Element.Children.Count > 0)
 				Element.CurrentPage = Element.Children[0];
+		}
+
+		LabelVisibility labelVisibility => (Element != null)
+			? Element.OnThisPlatform().GetBottomToolbarLabeling()
+			: LabelVisibility.Selected;
+		void SetBottomItemsLabeling()
+		{
+			//We need use case because Android using class LabelVisibilityMode declaration
+
+			switch (labelVisibility)
+			{
+				case LabelVisibility.Auto:
+					_bottomNavigationView.LabelVisibilityMode = LabelVisibilityMode.LabelVisibilityAuto;break;
+				case LabelVisibility.Selected:
+					_bottomNavigationView.LabelVisibilityMode = LabelVisibilityMode.LabelVisibilitySelected;break;
+				case LabelVisibility.Labeled:
+					_bottomNavigationView.LabelVisibilityMode = LabelVisibilityMode.LabelVisibilityLabeled;break;
+				case LabelVisibility.Unlabeled:
+					_bottomNavigationView.LabelVisibilityMode = LabelVisibilityMode.LabelVisibilityUnlabeled;break;
+			}
 		}
 
 		void UpdateTabIcons()

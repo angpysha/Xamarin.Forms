@@ -99,6 +99,7 @@ namespace Xamarin.Forms.Controls
 		protected override void Init()
 		{
 			On<Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
+			On<Android>().SetBottomToolbarLabeling(LabelVisibility.Labeled);
 			base.Init();
 		}
 	}

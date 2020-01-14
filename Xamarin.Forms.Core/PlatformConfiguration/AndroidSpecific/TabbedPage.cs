@@ -1,4 +1,5 @@
-﻿namespace Xamarin.Forms.PlatformConfiguration.AndroidSpecific
+﻿
+namespace Xamarin.Forms.PlatformConfiguration.AndroidSpecific
 {
 	using System;
 	using System.ComponentModel;
@@ -150,6 +151,39 @@
 		{
 			return GetMaxItemCount(config.Element);
 		}
+
+		public static  BindableProperty BottomToolbarLabelingProperty = BindableProperty.Create("BottomToolbarLabeling",
+			typeof(LabelVisibility),
+			typeof(TabbedPage),
+			LabelVisibility.Selected);
+
+		public static LabelVisibility GetBottomToolbarLabeling(BindableObject element)
+		{
+			return (LabelVisibility)element.GetValue(BottomToolbarLabelingProperty);
+		}
+
+		public static void SetBottomToolbarLabeling(BindableObject element, LabelVisibility value)
+		{
+			if (element.IsSet(BottomToolbarLabelingProperty) && GetBottomToolbarLabeling(element) != value)
+			{
+				throw new InvalidOperationException("Changing the labeling after it's been set is not supported.");
+			}
+
+			element.SetValue(BottomToolbarLabelingProperty,value);
+		}
+
+		public static LabelVisibility GetBottomToolbarLabeling(this IPlatformElementConfiguration<Android, FormsElement> config)
+		{
+			return GetBottomToolbarLabeling(config.Element);
+		}
+
+		public static IPlatformElementConfiguration<Android, FormsElement> SetBottomToolbarLabeling(
+			this IPlatformElementConfiguration<Android, FormsElement> config, LabelVisibility value)
+		{
+			SetBottomToolbarLabeling(config.Element,value);
+			return config;
+		}
+
 
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		[Obsolete("BarItemColor is obsolete as of version 4.0. Please use TabbedPage.UnselectedTabColor instead.")]
