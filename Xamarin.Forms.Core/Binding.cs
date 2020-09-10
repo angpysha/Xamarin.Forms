@@ -109,7 +109,7 @@ namespace Xamarin.Forms
 			return new Binding(GetBindingPath(propertyGetter), mode, converter, converterParameter, stringFormat);
 		}
 				
-		internal override void Apply(bool fromTarget)
+		public override void Apply(bool fromTarget)
 		{
 			base.Apply(fromTarget);
 
@@ -119,7 +119,7 @@ namespace Xamarin.Forms
 			_expression.Apply(fromTarget);
 		}
 
-		internal override void Apply(object context, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged = false)
+		public override void Apply(object context, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged = false)
 		{
 			object src = _source;
 			var isApplied = IsApplied;
@@ -281,7 +281,7 @@ namespace Xamarin.Forms
 			return level >= relativeSource.AncestorLevel;
 		}
 
-		internal override BindingBase Clone()
+		public override BindingBase Clone()
 		{
 			return new Binding(Path, Mode) {
 				Converter = Converter,
@@ -294,7 +294,7 @@ namespace Xamarin.Forms
 			};
 		}
 
-		internal override object GetSourceValue(object value, Type targetPropertyType)
+		public override object GetSourceValue(object value, Type targetPropertyType)
 		{
 			if (Converter != null)
 				value = Converter.Convert(value, targetPropertyType, ConverterParameter, CultureInfo.CurrentUICulture);
@@ -302,7 +302,7 @@ namespace Xamarin.Forms
 			return base.GetSourceValue(value, targetPropertyType);
 		}
 
-		internal override object GetTargetValue(object value, Type sourcePropertyType)
+		public override object GetTargetValue(object value, Type sourcePropertyType)
 		{
 			if (Converter != null)
 				value = Converter.ConvertBack(value, sourcePropertyType, ConverterParameter, CultureInfo.CurrentUICulture);
@@ -310,7 +310,7 @@ namespace Xamarin.Forms
 			return base.GetTargetValue(value, sourcePropertyType);
 		}
 
-		internal override void Unapply(bool fromBindingContextChanged = false)
+		public override void Unapply(bool fromBindingContextChanged = false)
 		{
 			if (Source != null && !(Source is RelativeBindingSource) && fromBindingContextChanged && IsApplied)
 				return;

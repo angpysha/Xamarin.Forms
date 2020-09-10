@@ -47,7 +47,7 @@ namespace Xamarin.Forms
 			}
 		}
 
-		internal override BindingBase Clone()
+		public override BindingBase Clone()
 		{
 			var bindingsclone = new List<BindingBase>(Bindings.Count);
 			foreach (var b in Bindings)
@@ -64,7 +64,7 @@ namespace Xamarin.Forms
 			};
 		}
 
-		internal override void Apply(bool fromTarget)
+		public override void Apply(bool fromTarget)
 		{
 			if (_applying)
 				return;
@@ -116,7 +116,7 @@ namespace Xamarin.Forms
 			}
 		}
 
-		internal override void Apply(object context, BindableObject targetObject, BindableProperty targetProperty, bool fromBindingContextChanged = false)
+		public override void Apply(object context, BindableObject targetObject, BindableProperty targetProperty, bool fromBindingContextChanged = false)
 		{
 			if (_bindings == null)
 				throw new InvalidOperationException("Bindings is null");
@@ -174,7 +174,7 @@ namespace Xamarin.Forms
 			return valuearray;
 		}
 
-		internal override object GetSourceValue(object value, Type targetPropertyType)
+		public override object GetSourceValue(object value, Type targetPropertyType)
 		{
 			var valuearray = value as object[];
 			if (valuearray != null && Converter != null)
@@ -189,7 +189,7 @@ namespace Xamarin.Forms
 			return base.GetSourceValue(value, targetPropertyType);
 		}
 
-		internal override object GetTargetValue(object value, Type sourcePropertyType)
+		public override object GetTargetValue(object value, Type sourcePropertyType)
 		{
 			if (Converter != null) {
 				var values = GetValueArray();
@@ -208,7 +208,7 @@ namespace Xamarin.Forms
 				Apply(fromTarget: false);
 		}
 
-		internal override void Unapply(bool fromBindingContextChanged = false)
+		public override void Unapply(bool fromBindingContextChanged = false)
 		{
 			if (!fromBindingContextChanged) {
 				if (_bpProxies != null && _proxyObject != null)

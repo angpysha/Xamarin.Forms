@@ -66,7 +66,7 @@ namespace Xamarin.Forms
 			}
 		}
 
-		internal override void Apply(bool fromTarget)
+		public override void Apply(bool fromTarget)
 		{
 			base.Apply(fromTarget);
 
@@ -76,7 +76,7 @@ namespace Xamarin.Forms
 			_expression.Apply(fromTarget);
 		}
 
-		internal override async void Apply(object newContext, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged = false)
+		public override async void Apply(object newContext, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged = false)
 		{
 			var view = bindObj as Element;
 			if (view == null)
@@ -88,12 +88,12 @@ namespace Xamarin.Forms
 			ApplyInner(templatedParent, bindObj, targetProperty);
 		}
 
-		internal override BindingBase Clone()
+		public override BindingBase Clone()
 		{
 			return new TemplateBinding(Path, Mode) { Converter = Converter, ConverterParameter = ConverterParameter, StringFormat = StringFormat };
 		}
 
-		internal override object GetSourceValue(object value, Type targetPropertyType)
+		public override object GetSourceValue(object value, Type targetPropertyType)
 		{
 			if (Converter != null)
 				value = Converter.Convert(value, targetPropertyType, ConverterParameter, CultureInfo.CurrentUICulture);
@@ -101,7 +101,7 @@ namespace Xamarin.Forms
 			return base.GetSourceValue(value, targetPropertyType);
 		}
 
-		internal override object GetTargetValue(object value, Type sourcePropertyType)
+		public override object GetTargetValue(object value, Type sourcePropertyType)
 		{
 			if (Converter != null)
 				value = Converter.ConvertBack(value, sourcePropertyType, ConverterParameter, CultureInfo.CurrentUICulture);
@@ -109,7 +109,7 @@ namespace Xamarin.Forms
 			return base.GetTargetValue(value, sourcePropertyType);
 		}
 
-		internal override void Unapply(bool fromBindingContextChanged = false)
+		public override void Unapply(bool fromBindingContextChanged = false)
 		{
 			base.Unapply(fromBindingContextChanged: fromBindingContextChanged);
 

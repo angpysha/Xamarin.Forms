@@ -67,7 +67,7 @@ namespace Xamarin.Forms.Pages
 			}
 		}
 
-		internal override void Apply(bool fromTarget)
+		public override void Apply(bool fromTarget)
 		{
 			base.Apply(fromTarget);
 
@@ -77,7 +77,7 @@ namespace Xamarin.Forms.Pages
 			_expression.Apply(fromTarget);
 		}
 
-		internal override async void Apply(object newContext, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged)
+		public override async void Apply(object newContext, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged)
 		{
 			var view = bindObj as VisualElement;
 			if (view == null)
@@ -95,12 +95,12 @@ namespace Xamarin.Forms.Pages
 			ApplyInner(dataSourceParent, bindObj, targetProperty);
 		}
 
-		internal override BindingBase Clone()
+		public override BindingBase Clone()
 		{
 			return new DataSourceBinding(Path, Mode) { Converter = Converter, ConverterParameter = ConverterParameter, StringFormat = StringFormat };
 		}
 
-		internal override object GetSourceValue(object value, Type targetPropertyType)
+		public override object GetSourceValue(object value, Type targetPropertyType)
 		{
 			if (Converter != null)
 				value = Converter.Convert(value, targetPropertyType, ConverterParameter, CultureInfo.CurrentUICulture);
@@ -108,7 +108,7 @@ namespace Xamarin.Forms.Pages
 			return base.GetSourceValue(value, targetPropertyType);
 		}
 
-		internal override object GetTargetValue(object value, Type sourcePropertyType)
+		public  override object GetTargetValue(object value, Type sourcePropertyType)
 		{
 			if (Converter != null)
 				value = Converter.ConvertBack(value, sourcePropertyType, ConverterParameter, CultureInfo.CurrentUICulture);
@@ -116,7 +116,7 @@ namespace Xamarin.Forms.Pages
 			return base.GetTargetValue(value, sourcePropertyType);
 		}
 
-		internal override void Unapply(bool fromBindingContextChanged = false)
+		public override void Unapply(bool fromBindingContextChanged = false)
 		{
 			base.Unapply(fromBindingContextChanged: fromBindingContextChanged);
 

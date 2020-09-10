@@ -9,20 +9,20 @@ namespace Xamarin.Forms
 
 		public AppThemeBinding() => Application.Current.RequestedThemeChanged += (o,e) => Device.BeginInvokeOnMainThread(() => ApplyCore());
 
-		internal override BindingBase Clone() => new AppThemeBinding {
+		public override BindingBase Clone() => new AppThemeBinding {
 			Light = Light,
 			_isLightSet = _isLightSet,
 			Dark = Dark,
 			_isDarkSet = _isDarkSet,
 			Default = Default };
 
-		internal override void Apply(bool fromTarget)
+		public override void Apply(bool fromTarget)
 		{
 			base.Apply(fromTarget);
 			ApplyCore();
 		}
 
-		internal override void Apply(object context, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged = false)
+		public override void Apply(object context, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged = false)
 		{
 			_weakTarget = new WeakReference<BindableObject>(bindObj);
 			_targetProperty = targetProperty;
@@ -30,7 +30,7 @@ namespace Xamarin.Forms
 			ApplyCore();
 		}
 
-		internal override void Unapply(bool fromBindingContextChanged = false)
+		public override void Unapply(bool fromBindingContextChanged = false)
 		{
 			base.Unapply(fromBindingContextChanged);
 			_weakTarget = null;

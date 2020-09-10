@@ -89,7 +89,7 @@ namespace Xamarin.Forms.Internals
 		BindableProperty _targetProperty;
 
 		// Applies the binding to a previously set source and target.
-		internal override void Apply(bool fromTarget = false)
+		public override void Apply(bool fromTarget = false)
 		{
 			base.Apply(fromTarget);
 
@@ -109,7 +109,7 @@ namespace Xamarin.Forms.Internals
 		}
 
 		// Applies the binding to a new source or target.
-		internal override void Apply(object context, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged = false)
+		public override void Apply(object context, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged = false)
 		{
 			_targetProperty = targetProperty;
 			var source = Source ?? Context ?? context;
@@ -135,7 +135,7 @@ namespace Xamarin.Forms.Internals
 			ApplyCore(source, bindObj, targetProperty);
 		}
 
-		internal override BindingBase Clone()
+		public override BindingBase Clone()
 		{
 			Tuple<Func<TSource, object>, string> [] handlers = _handlers == null ? null : new Tuple<Func<TSource, object>, string> [_handlers.Length];
 			if (handlers != null) {
@@ -152,7 +152,7 @@ namespace Xamarin.Forms.Internals
 			};
 		}
 
-		internal override object GetSourceValue(object value, Type targetPropertyType)
+		public override object GetSourceValue(object value, Type targetPropertyType)
 		{
 			if (Converter != null)
 				value = Converter.Convert(value, targetPropertyType, ConverterParameter, CultureInfo.CurrentUICulture);
@@ -160,7 +160,7 @@ namespace Xamarin.Forms.Internals
 			return base.GetSourceValue(value, targetPropertyType);
 		}
 
-		internal override object GetTargetValue(object value, Type sourcePropertyType)
+		public override object GetTargetValue(object value, Type sourcePropertyType)
 		{
 			if (Converter != null)
 				value = Converter.ConvertBack(value, sourcePropertyType, ConverterParameter, CultureInfo.CurrentUICulture);
@@ -169,7 +169,7 @@ namespace Xamarin.Forms.Internals
 			return value;
 		}
 
-		internal override void Unapply(bool fromBindingContextChanged = false)
+		public override void Unapply(bool fromBindingContextChanged = false)
 		{
 			if (Source != null && fromBindingContextChanged && IsApplied)
 				return;

@@ -112,13 +112,13 @@ namespace Xamarin.Forms
 				throw new InvalidOperationException("Cannot change a binding while it's applied");
 		}
 
-		internal virtual void Apply(bool fromTarget) => IsApplied = true;
+		public virtual void Apply(bool fromTarget) => IsApplied = true;
 
-		internal virtual void Apply(object context, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged = false) => IsApplied = true;
+		public virtual void Apply(object context, BindableObject bindObj, BindableProperty targetProperty, bool fromBindingContextChanged = false) => IsApplied = true;
 
-		internal abstract BindingBase Clone();
+		public abstract BindingBase Clone();
 
-		internal virtual object GetSourceValue(object value, Type targetPropertyType)
+		public virtual object GetSourceValue(object value, Type targetPropertyType)
 		{
 			if (value == null && TargetNullValue != null)
 				return TargetNullValue;
@@ -129,7 +129,7 @@ namespace Xamarin.Forms
 			return value;
 		}
 
-		internal bool TryFormat(string format, object arg0, out string value)
+		public bool TryFormat(string format, object arg0, out string value)
 		{
 			try {
 				value = string.Format(format, arg0);
@@ -141,7 +141,7 @@ namespace Xamarin.Forms
 			}
 		}
 
-		internal bool TryFormat(string format, object[] args, out string value)
+		public bool TryFormat(string format, object[] args, out string value)
 		{
 			try {
 				value = string.Format(format, args);
@@ -154,7 +154,7 @@ namespace Xamarin.Forms
 			}
 		}
 
-		internal virtual object GetTargetValue(object value, Type sourcePropertyType) => value;
+		public virtual object GetTargetValue(object value, Type sourcePropertyType) => value;
 
 		internal static bool TryGetSynchronizedCollection(IEnumerable collection, out CollectionSynchronizationContext synchronizationContext)
 		{
@@ -164,6 +164,6 @@ namespace Xamarin.Forms
 			return SynchronizedCollections.TryGetValue(collection, out synchronizationContext);
 		}
 
-		internal virtual void Unapply(bool fromBindingContextChanged = false) => IsApplied = false;
+		public virtual void Unapply(bool fromBindingContextChanged = false) => IsApplied = false;
 	}
 }

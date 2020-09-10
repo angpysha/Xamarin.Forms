@@ -3,6 +3,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Xamarin.Forms.Controls.GalleryPages.ShapesGalleries.EllipseGallery"
+    xmlns:shapes="clr-namespace:Xamarin.Forms.Shapes;assembly=Xamarin.Forms.Core"
     Title="Ellipse Gallery">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -19,25 +20,27 @@
                 Padding="12">
                 <Label
                     Text="A basic Rectangle"/>
-                <Ellipse x:Name="ellipse"
+                <shapes:Ellipse x:Name="ellipse"
                     Fill ="Red"
                     WidthRequest ="150"
                     HeightRequest ="50"/>
                 <Label
                     Text="A Circle"/>
-                <Ellipse
+                <shapes:Ellipse
                     Stroke ="Red"
                     StrokeThickness="4"
                     WidthRequest ="150"
                     HeightRequest ="150"/>
                 <Label
                     Text="An Ellipse with stroke"/>
-                <Ellipse
-                    Stroke ="Red"
-                    StrokeThickness="4"
-                    WidthRequest ="150"
-                    HeightRequest ="50"/>
-                <Ellipse
+                <shapes:Ellipse
+
+                     Stroke ="Red"
+                     StrokeThickness="4"
+                     WidthRequest ="150"
+                     HeightRequest ="50"/>
+                <shapes:Ellipse
+
                     Fill="DarkBlue"
                     Stroke ="Red"
                     StrokeThickness="4"
@@ -45,7 +48,8 @@
                     HeightRequest ="50"/>
                 <Label
                     Text="An Ellipse with stroke dash"/>
-                <Ellipse
+                <shapes:Ellipse
+
                     Fill="DarkBlue"
                     Stroke ="Red"
                     StrokeThickness="4"
