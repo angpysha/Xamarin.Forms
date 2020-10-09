@@ -7,14 +7,15 @@ namespace Xamarin.Forms
 		WeakReference<BindableObject> _weakTarget;
 		BindableProperty _targetProperty;
 
-		public AppThemeBinding() => Application.Current.RequestedThemeChanged += (o,e) => Device.BeginInvokeOnMainThread(() => ApplyCore());
+		public AppThemeBinding() => Application.Current.RequestedThemeChanged += (o, e) => Device.BeginInvokeOnMainThread(() => ApplyCore());
 
 		public override BindingBase Clone() => new AppThemeBinding {
 			Light = Light,
 			_isLightSet = _isLightSet,
 			Dark = Dark,
 			_isDarkSet = _isDarkSet,
-			Default = Default };
+			Default = Default
+		};
 
 		public override void Apply(bool fromTarget)
 		{
@@ -74,12 +75,13 @@ namespace Xamarin.Forms
 
 		object GetValue()
 		{
-			switch (Application.Current.RequestedTheme) {
-			default:
-			case OSAppTheme.Light:
-				return _isLightSet ? Light :  Default;
-			case OSAppTheme.Dark:
-				return _isDarkSet ? Dark : Default;
+			switch (Application.Current.RequestedTheme)
+			{
+				default:
+				case OSAppTheme.Light:
+					return _isLightSet ? Light : Default;
+				case OSAppTheme.Dark:
+					return _isDarkSet ? Dark : Default;
 			}
 		}
 	}

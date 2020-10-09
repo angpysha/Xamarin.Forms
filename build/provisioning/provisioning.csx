@@ -36,19 +36,11 @@ if (IsMac)
 		await ResolveUrl (Environment.GetEnvironmentVariable ("IOS_SDK_MAC"));
 		specificSdkSet = true;
 	}
-	else
-	{
-		await ResolveUrl ("https://bosstoragemirror.blob.core.windows.net/wrench/jenkins/d16-7-xcode11.7/3016ffe2b0ee27bf4a2d61e6161430d6bbd62f78/7/package/notarized/xamarin.mac-6.20.3.5.pkg");
-	}
 
 	if(!String.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable ("MAC_SDK_MAC")))
 	{
 		await ResolveUrl (Environment.GetEnvironmentVariable ("MAC_SDK_MAC"));
 		specificSdkSet = true;
-	}
-	else
-	{
-		await ResolveUrl ("https://bosstoragemirror.blob.core.windows.net/wrench/jenkins/d16-7-xcode11.7/3016ffe2b0ee27bf4a2d61e6161430d6bbd62f78/7/package/notarized/xamarin.ios-13.20.3.5.pkg");
 	}
 	
 	if(!specificSdkSet)
