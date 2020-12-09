@@ -52,6 +52,8 @@ namespace Xamarin.Forms.Platform.UWP
 			{
 				Internals.Log.Warning(nameof(Shell), $"Failed to Navigate Back: {exc}");
 			}
+
+			UpdateToolBar();
 		}
 
 		public WBrush FlyoutBackgroundColor
@@ -65,6 +67,7 @@ namespace Xamarin.Forms.Platform.UWP
 			base.OnApplyTemplate();
 			UpdatePaneButtonColor(TogglePaneButton, !IsPaneOpen);
 			UpdatePaneButtonColor(NavigationViewBackButton, !IsPaneOpen);
+			(GetTemplateChild(TogglePaneButton) as FrameworkElement)?.SetAutomationPropertiesAutomationId("OK");
 		}
 
 		void OnPaneOpening(Microsoft.UI.Xaml.Controls.NavigationView sender, object args)
@@ -76,6 +79,7 @@ namespace Xamarin.Forms.Platform.UWP
 			UpdatePaneButtonColor(NavigationViewBackButton, false);
 			UpdateFlyoutBackgroundColor();
 			UpdateFlyoutBackdrop();
+			UpdateFlyoutVerticalScrollMode();
 		}
 
 		void OnPaneOpened(Microsoft.UI.Xaml.Controls.NavigationView sender, object args)
@@ -87,6 +91,7 @@ namespace Xamarin.Forms.Platform.UWP
 
 		void OnPaneClosing(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewPaneClosingEventArgs args)
 		{
+			args.Cancel = true;
 			if (Shell != null)
 				Shell.FlyoutIsPresented = false;
 			UpdatePaneButtonColor(TogglePaneButton, true);
@@ -185,6 +190,7 @@ namespace Xamarin.Forms.Platform.UWP
 
 		#endregion IVisualElementRenderer
 		ShellSplitView ShellSplitView => (ShellSplitView)GetTemplateChild("RootSplitView");
+		ScrollViewer ShellLeftNavScrollViewer => (ScrollViewer)GetTemplateChild("LeftNavScrollViewer");
 		protected internal Shell Element { get; set; }
 
 		internal Shell Shell => Element;
@@ -207,6 +213,33 @@ namespace Xamarin.Forms.Platform.UWP
 			else if (e.PropertyName == Shell.FlyoutBackgroundColorProperty.PropertyName)
 			{
 				UpdateFlyoutBackgroundColor();
+			}
+			else if (e.PropertyName == Shell.FlyoutVerticalScrollModeProperty.PropertyName)
+			{
+				UpdateFlyoutVerticalScrollMode();
+			}
+		}
+
+		void UpdateFlyoutVerticalScrollMode()
+		{
+			var scrollViewer = ShellLeftNavScrollViewer;
+			if (scrollViewer != null)
+			{
+				switch (Shell.FlyoutVerticalScrollMode)
+				{
+					case ScrollMode.Disabled:
+						scrollViewer.VerticalScrollMode = Windows.UI.Xaml.Controls.ScrollMode.Disabled;
+						scrollViewer.VerticalScrollBarVisibility = Windows.UI.Xaml.Controls.ScrollBarVisibility.Hidden;
+						break;
+					case ScrollMode.Enabled:
+						scrollViewer.VerticalScrollMode = Windows.UI.Xaml.Controls.ScrollMode.Enabled;
+						scrollViewer.VerticalScrollBarVisibility = Windows.UI.Xaml.Controls.ScrollBarVisibility.Visible;
+						break;
+					default:
+						scrollViewer.VerticalScrollMode = Windows.UI.Xaml.Controls.ScrollMode.Auto;
+						scrollViewer.VerticalScrollBarVisibility = Windows.UI.Xaml.Controls.ScrollBarVisibility.Auto;
+						break;
+				}
 			}
 		}
 
@@ -258,6 +291,8 @@ namespace Xamarin.Forms.Platform.UWP
 
 			var shr = CreateShellHeaderRenderer(shell);
 			PaneCustomContent = shr;
+			PaneFooter = CreateShellFooterRenderer(shell);
+
 			UpdateMenuItemSource();
 			SwitchShellItem(shell.CurrentItem, false);
 			IsPaneOpen = Shell.FlyoutIsPresented;
@@ -270,7 +305,7 @@ namespace Xamarin.Forms.Platform.UWP
 			_shell.Navigated += OnShellNavigated;
 			UpdateToolBar();
 		}
-
+		
 		void OnShellNavigated(object sender, ShellNavigatedEventArgs e)
 		{
 			UpdateToolBar();
@@ -295,8 +330,8 @@ namespace Xamarin.Forms.Platform.UWP
 			switch (_flyoutBehavior)
 			{
 				case FlyoutBehavior.Disabled:
-					IsPaneToggleButtonVisible = false;
-					IsPaneVisible = false;
+					IsPaneVisible = IsBackEnabled;
+					IsPaneToggleButtonVisible = !IsBackEnabled;
 					PaneDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewPaneDisplayMode.LeftMinimal;
 					IsPaneOpen = false;
 					break;
@@ -406,6 +441,7 @@ namespace Xamarin.Forms.Platform.UWP
 
 		public virtual ShellFlyoutTemplateSelector CreateShellFlyoutTemplateSelector() => new ShellFlyoutTemplateSelector();
 		public virtual ShellHeaderRenderer CreateShellHeaderRenderer(Shell shell) => new ShellHeaderRenderer(shell);
+		public virtual ShellFooterRenderer CreateShellFooterRenderer(Shell shell) => new ShellFooterRenderer(shell);
 		public virtual ShellItemRenderer CreateShellItemRenderer() => new ShellItemRenderer(this);
 		public virtual ShellSectionRenderer CreateShellSectionRenderer() => new ShellSectionRenderer();
 	}

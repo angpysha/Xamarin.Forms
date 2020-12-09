@@ -127,6 +127,7 @@
     <Compile Include="CollectionView\HorizontalTemplatedHeaderView.cs" />
     <Compile Include="CollectionView\IItemsViewSource.cs" />
     <Compile Include="CollectionView\IndexPathExtensions.cs" />
+    <Compile Include="CollectionView\IndexPathHelpers.cs" />
     <Compile Include="CollectionView\ItemsSourceFactory.cs" />
     <Compile Include="CollectionView\ItemsViewCell.cs" />
     <Compile Include="CollectionView\ItemsViewRenderer.cs" />
@@ -190,7 +191,6 @@
     <Compile Include="Renderers\PageContainer.cs" />
     <Compile Include="Renderers\CheckBoxRendererBase.cs" />
     <Compile Include="Renderers\PhoneFlyoutPageRenderer.cs" />
-    <Compile Include="Renderers\RadioButtonCALayer.cs" />
     <Compile Include="Renderers\TabletFlyoutPageRenderer.cs" />
     <Compile Include="Renderers\WkWebViewRenderer.cs" />
     <Compile Include="Renderers\ElementSelectedEventArgs.cs" />
