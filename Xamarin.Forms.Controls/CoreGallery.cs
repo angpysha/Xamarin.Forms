@@ -550,6 +550,24 @@ namespace Xamarin.Forms.Controls
 	[Preserve(AllMembers = true)]
 	internal class CoreRootPage : ContentPage
 	{
+		public static readonly BindableProperty LabelTestProperty = BindableProperty.Create(nameof(LabelTest),
+			typeof(int),
+			typeof(CoreGallery),
+			0,
+			BindingMode.TwoWay,
+			raiseOnEqual:true,
+			propertyChanging:onpropertyCHanging);
+
+		private static void onpropertyCHanging(BindableObject bindable, object oldValue, object newValue)
+		{
+			int iii = 0;
+		}
+
+		public int LabelTest
+		{
+			get => (int)GetValue(LabelTestProperty);
+			set => SetValue(LabelTestProperty, value);
+		}
 		CoreRootView CoreRootView { get; }
 
 		public CoreRootPage(Page rootPage, NavigationBehavior navigationBehavior = NavigationBehavior.PushAsync)
@@ -597,7 +615,17 @@ namespace Xamarin.Forms.Controls
 						await Navigation.PushModalAsync(TestCases.GetTestCases());
 				})
 			};
-
+			var label = new Label() { Text = "testLabel" };
+			var binding = new Binding() { Source = this, Path = nameof(LabelTest), Mode = BindingMode.TwoWay };
+			label.SetBinding(Label.TextProperty,binding);
+			var changeButton = new Button()
+			{
+				Text = "Change value",
+				Command = new Command(() =>
+				{
+					LabelTest = 1;
+				})
+			};
 			var stackLayout = new StackLayout()
 			{
 				Children = {
@@ -611,7 +639,9 @@ namespace Xamarin.Forms.Controls
 							GC.WaitForPendingFinalizers ();
 							GC.Collect ();
 						})
-					}
+					},
+					label,
+					changeButton
 				}
 			};
 

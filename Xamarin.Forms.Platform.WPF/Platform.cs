@@ -178,6 +178,7 @@ namespace Xamarin.Forms.Platform.WPF
 
 		public IReadOnlyList<Page> NavigationStack
 		{
+			
 			get { throw new InvalidOperationException("NavigationStack is not supported globally on Windows, please use a NavigationPage."); }
 		}
 
@@ -185,6 +186,7 @@ namespace Xamarin.Forms.Platform.WPF
 		{
 			get
 			{
+				
 				return _page.InternalChildren.Cast<Page>().ToList();
 			}
 		}

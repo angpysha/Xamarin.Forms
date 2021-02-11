@@ -294,6 +294,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 				renderer.ShellSection = shellContent;
 				AddRenderer(renderer);
+				
 				viewControllers[i++] = renderer.ViewController;
 			}
 			ViewControllers = viewControllers;
