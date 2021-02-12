@@ -35,3 +35,23 @@ steps:
     arguments: '-Target NugetPack -ScriptArgs ''--packageVersion="5.0.0.1938-angpysha"'''
     errorActionPreference: 'silentlyContinue'
     pwsh: true
+
+- task: NuGetCommand@2
+  inputs:
+    command: 'pack'
+    packagesToPack: '.nuspec/*.nuspec'
+    packDestination: '$(Pipeline.Workspace)\artifacts'
+    versioningScheme: 'off'
+
+# - task: CopyFiles@2
+#   inputs:
+#     SourceFolder: 'artifacts'
+#     Contents: '*.nupkg'
+#     TargetFolder: '$(Pipeline.Workspace)\Stubs'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Pipeline.Workspace)\artifacts'
+    artifact: 'packages'
+    publishLocation: 'pipeline'
+
