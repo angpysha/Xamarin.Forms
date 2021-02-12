@@ -22,7 +22,8 @@ steps:
   inputs:
     command: 'restore'
     restoreSolution: 'Xamarin.Forms.sln'
-    feedsToUse: 'select'
+    feedsToUse: 'config'
+    nugetConfigPath: 'NuGet.Config'
 
 # - task: VSBuild@1
 #   inputs:
