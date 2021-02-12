@@ -144,12 +144,28 @@ namespace Xamarin.Forms
 		}
 
 		public static BindableProperty Create(string propertyName, Type returnType, Type declaringType, object defaultValue = null, BindingMode defaultBindingMode = BindingMode.OneWay,
-											  ValidateValueDelegate validateValue = null, BindingPropertyChangedDelegate propertyChanged = null, BindingPropertyChangingDelegate propertyChanging = null,
-											  CoerceValueDelegate coerceValue = null, CreateDefaultValueDelegate defaultValueCreator = null,bool raiseOnEqual = false)
+			ValidateValueDelegate validateValue = null, BindingPropertyChangedDelegate propertyChanged = null, BindingPropertyChangingDelegate propertyChanging = null,
+			CoerceValueDelegate coerceValue = null, CreateDefaultValueDelegate defaultValueCreator = null)
+		{
+			return new BindableProperty(propertyName, returnType, declaringType, defaultValue, defaultBindingMode, validateValue, propertyChanged, propertyChanging, coerceValue,
+				defaultValueCreator: defaultValueCreator);
+		}
+
+		public static BindableProperty CreateExtended(string propertyName, Type returnType, Type declaringType, object defaultValue = null, BindingMode defaultBindingMode = BindingMode.OneWay,
+			ValidateValueDelegate validateValue = null, BindingPropertyChangedDelegate propertyChanged = null, BindingPropertyChangingDelegate propertyChanging = null,
+			CoerceValueDelegate coerceValue = null, CreateDefaultValueDelegate defaultValueCreator = null,bool raiseOnEqual = false)
 		{
 			return new BindableProperty(propertyName, returnType, declaringType, defaultValue, defaultBindingMode, validateValue, propertyChanged, propertyChanging, coerceValue,
 				defaultValueCreator: defaultValueCreator,raiseOnEqual:raiseOnEqual);
 		}
+
+		//public static BindableProperty Create(string propertyName, Type returnType, Type declaringType, bool raiseOnEqual, object defaultValue = null, BindingMode defaultBindingMode = BindingMode.OneWay,
+		//									  ValidateValueDelegate validateValue = null, BindingPropertyChangedDelegate propertyChanged = null, BindingPropertyChangingDelegate propertyChanging = null,
+		//									  CoerceValueDelegate coerceValue = null, CreateDefaultValueDelegate defaultValueCreator = null)
+		//{
+		//	return new BindableProperty(propertyName, returnType, declaringType, defaultValue, defaultBindingMode, validateValue, propertyChanged, propertyChanging, coerceValue,
+		//		defaultValueCreator: defaultValueCreator,raiseOnEqual:raiseOnEqual);
+		//}
 
 		[Obsolete("CreateAttached<> (generic) is obsolete as of version 2.1.0 and is no longer supported.")]
 		[EditorBrowsable(EditorBrowsableState.Never)]

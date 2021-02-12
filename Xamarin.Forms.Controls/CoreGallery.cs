@@ -550,7 +550,7 @@ namespace Xamarin.Forms.Controls
 	[Preserve(AllMembers = true)]
 	internal class CoreRootPage : ContentPage
 	{
-		public static readonly BindableProperty LabelTestProperty = BindableProperty.Create(nameof(LabelTest),
+		public static readonly BindableProperty LabelTestProperty = BindableProperty.CreateExtended(nameof(LabelTest),
 			typeof(int),
 			typeof(CoreGallery),
 			0,
@@ -575,6 +575,7 @@ namespace Xamarin.Forms.Controls
 			ValidateRegistrar();
 
 			var galleryFactory = DependencyService.Get<IPlatformSpecificCoreGalleryFactory>();
+
 
 			Title = galleryFactory?.Title ?? "Core Gallery";
 
