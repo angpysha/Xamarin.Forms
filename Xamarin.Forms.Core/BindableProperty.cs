@@ -34,6 +34,8 @@ namespace Xamarin.Forms
 
 		public delegate bool ValidateValueDelegate<in TPropertyType>(BindableObject bindable, TPropertyType value);
 
+		public bool RaiseOnEqual;
+
 		static readonly Dictionary<Type, TypeConverter> KnownTypeConverters = new Dictionary<Type, TypeConverter>
 		{
 			{ typeof(Uri), new UriTypeConverter() },
@@ -66,7 +68,8 @@ namespace Xamarin.Forms
 
 		BindableProperty(string propertyName, Type returnType, Type declaringType, object defaultValue, BindingMode defaultBindingMode = BindingMode.OneWay,
 								 ValidateValueDelegate validateValue = null, BindingPropertyChangedDelegate propertyChanged = null, BindingPropertyChangingDelegate propertyChanging = null,
-								 CoerceValueDelegate coerceValue = null, BindablePropertyBindingChanging bindingChanging = null, bool isReadOnly = false, CreateDefaultValueDelegate defaultValueCreator = null)
+								 CoerceValueDelegate coerceValue = null, BindablePropertyBindingChanging bindingChanging = null, bool isReadOnly = false, CreateDefaultValueDelegate defaultValueCreator = null,
+								 bool raiseOnEqual = false)
 		{
 			if (propertyName == null)
 				throw new ArgumentNullException(nameof(propertyName));
@@ -101,6 +104,7 @@ namespace Xamarin.Forms
 			BindingChanging = bindingChanging;
 			IsReadOnly = isReadOnly;
 			DefaultValueCreator = defaultValueCreator;
+			RaiseOnEqual = raiseOnEqual;
 		}
 
 		public Type DeclaringType { get; private set; }
@@ -147,6 +151,14 @@ namespace Xamarin.Forms
 				defaultValueCreator: defaultValueCreator);
 		}
 
+		public static BindableProperty Create(string propertyName, bool raiseOnEqual,Type returnType, Type declaringType, object defaultValue = null, BindingMode defaultBindingMode = BindingMode.OneWay,
+			ValidateValueDelegate validateValue = null, BindingPropertyChangedDelegate propertyChanged = null, BindingPropertyChangingDelegate propertyChanging = null,
+			CoerceValueDelegate coerceValue = null, CreateDefaultValueDelegate defaultValueCreator = null)
+		{
+			return new BindableProperty(propertyName, returnType, declaringType, defaultValue, defaultBindingMode, validateValue, propertyChanged, propertyChanging, coerceValue,
+				defaultValueCreator: defaultValueCreator,raiseOnEqual:raiseOnEqual);
+		}
+
 		[Obsolete("CreateAttached<> (generic) is obsolete as of version 2.1.0 and is no longer supported.")]
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static BindableProperty CreateAttached<TDeclarer, TPropertyType>(Expression<Func<BindableObject, TPropertyType>> staticgetter, TPropertyType defaultValue,
@@ -163,6 +175,13 @@ namespace Xamarin.Forms
 													  CoerceValueDelegate coerceValue = null, CreateDefaultValueDelegate defaultValueCreator = null)
 		{
 			return CreateAttached(propertyName, returnType, declaringType, defaultValue, defaultBindingMode, validateValue, propertyChanged, propertyChanging, coerceValue, null, false, defaultValueCreator);
+		}
+
+		public static BindableProperty CreateAttached(string propertyName, bool raiseOnEqual, Type returnType, Type declaringType, object defaultValue, BindingMode defaultBindingMode = BindingMode.OneWay,
+			ValidateValueDelegate validateValue = null, BindingPropertyChangedDelegate propertyChanged = null, BindingPropertyChangingDelegate propertyChanging = null,
+			CoerceValueDelegate coerceValue = null, CreateDefaultValueDelegate defaultValueCreator = null)
+		{
+			return CreateAttached(propertyName, returnType, declaringType, defaultValue, defaultBindingMode, validateValue, propertyChanged, propertyChanging, coerceValue, null, false, raiseOnEqual,defaultValueCreator);
 		}
 
 		[Obsolete("CreateAttachedReadOnly<> (generic) is obsolete as of version 2.1.0 and is no longer supported.")]
@@ -187,6 +206,15 @@ namespace Xamarin.Forms
 					defaultValueCreator));
 		}
 
+		public static BindablePropertyKey CreateAttachedReadOnly(string propertyName, bool raiseOnEqual, Type returnType, Type declaringType, object defaultValue, BindingMode defaultBindingMode = BindingMode.OneWayToSource,
+			ValidateValueDelegate validateValue = null, BindingPropertyChangedDelegate propertyChanged = null, BindingPropertyChangingDelegate propertyChanging = null,
+			CoerceValueDelegate coerceValue = null, CreateDefaultValueDelegate defaultValueCreator = null)
+		{
+			return
+				new BindablePropertyKey(CreateAttached(propertyName, returnType, declaringType, defaultValue, defaultBindingMode, validateValue, propertyChanged, propertyChanging, coerceValue, null, true,raiseOnEqual,
+					defaultValueCreator));
+		}
+
 		[Obsolete("CreateReadOnly<> (generic) is obsolete as of version 2.1.0 and is no longer supported.")]
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static BindablePropertyKey CreateReadOnly<TDeclarer, TPropertyType>(Expression<Func<TDeclarer, TPropertyType>> getter, TPropertyType defaultValue,
@@ -204,6 +232,15 @@ namespace Xamarin.Forms
 			return
 				new BindablePropertyKey(new BindableProperty(propertyName, returnType, declaringType, defaultValue, defaultBindingMode, validateValue, propertyChanged, propertyChanging, coerceValue,
 					isReadOnly: true, defaultValueCreator: defaultValueCreator));
+		}
+
+		public static BindablePropertyKey CreateReadOnly(string propertyName, bool raiseOnEqual, Type returnType, Type declaringType, object defaultValue, BindingMode defaultBindingMode = BindingMode.OneWayToSource,
+			ValidateValueDelegate validateValue = null, BindingPropertyChangedDelegate propertyChanged = null, BindingPropertyChangingDelegate propertyChanging = null,
+			CoerceValueDelegate coerceValue = null, CreateDefaultValueDelegate defaultValueCreator = null)
+		{
+			return
+				new BindablePropertyKey(new BindableProperty(propertyName, returnType, declaringType, defaultValue, defaultBindingMode, validateValue, propertyChanged, propertyChanging, coerceValue,
+					isReadOnly: true, defaultValueCreator: defaultValueCreator,raiseOnEqual:raiseOnEqual));
 		}
 
 		[Obsolete("Create<> (generic) is obsolete as of version 2.1.0 and is no longer supported.")]
@@ -308,6 +345,14 @@ namespace Xamarin.Forms
 		{
 			return new BindableProperty(propertyName, returnType, declaringType, defaultValue, defaultBindingMode, validateValue, propertyChanged, propertyChanging, coerceValue, bindingChanging, isReadOnly,
 				defaultValueCreator);
+		}
+
+		internal static BindableProperty CreateAttached(string propertyName, Type returnType, Type declaringType, object defaultValue, BindingMode defaultBindingMode, ValidateValueDelegate validateValue,
+			BindingPropertyChangedDelegate propertyChanged, BindingPropertyChangingDelegate propertyChanging, CoerceValueDelegate coerceValue, BindablePropertyBindingChanging bindingChanging,
+			bool isReadOnly,bool raiseOnEqual, CreateDefaultValueDelegate defaultValueCreator = null)
+		{
+			return new BindableProperty(propertyName, returnType, declaringType, defaultValue, defaultBindingMode, validateValue, propertyChanged, propertyChanging, coerceValue, bindingChanging, isReadOnly,
+				defaultValueCreator,raiseOnEqual);
 		}
 
 		internal object GetDefaultValue(BindableObject bindable)

@@ -11,6 +11,7 @@ using Xamarin.Forms.Controls.GalleryPages.DragAndDropGalleries;
 using Xamarin.Forms.Controls.GalleryPages.GradientGalleries;
 using Xamarin.Forms.Controls.GalleryPages.PlatformTestsGallery;
 using Xamarin.Forms.Controls.GalleryPages.RadioButtonGalleries;
+using Xamarin.Forms.Controls.GalleryPages.RaiseOnEqualTestPage;
 using Xamarin.Forms.Controls.GalleryPages.RefreshViewGalleries;
 using Xamarin.Forms.Controls.GalleryPages.ShapesGalleries;
 using Xamarin.Forms.Controls.GalleryPages.SwipeViewGalleries;
@@ -446,6 +447,7 @@ namespace Xamarin.Forms.Controls
 				new GalleryPageFactory(() => new WebViewGallery(), "WebView Gallery - Legacy"),
 				new GalleryPageFactory(() => new BindableLayoutGalleryPage(), "BindableLayout Gallery - Legacy"),
 				new GalleryPageFactory(() => new ShowModalWithTransparentBkgndGalleryPage(), "Modal With Transparent Background Gallery - Legacy"),
+				new GalleryPageFactory(() => new RaiseOnEqualPage(),"Test BindableProperty RaiseOnEqual"),
 			};
 
 		public CorePageView(Page rootPage, NavigationBehavior navigationBehavior = NavigationBehavior.PushAsync)

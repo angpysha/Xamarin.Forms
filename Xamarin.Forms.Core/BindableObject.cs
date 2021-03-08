@@ -396,7 +396,10 @@ namespace Xamarin.Forms
 			bool silent = (privateAttributes & SetValuePrivateFlags.Silent) != 0;
 			bool fromStyle = (privateAttributes & SetValuePrivateFlags.FromStyle) != 0;
 			bool converted = (privateAttributes & SetValuePrivateFlags.Converted) != 0;
-
+			if (property.RaiseOnEqual)
+			{
+				attributes |= SetValueFlags.RaiseOnEqual;
+			}
 			if (property == null)
 				throw new ArgumentNullException(nameof(property));
 			if (checkAccess && property.IsReadOnly)
@@ -460,7 +463,7 @@ namespace Xamarin.Forms
 				context.Attributes &= ~BindableContextAttributes.IsBeingSet;
 			}
 		}
-
+		private bool _ignoreChange = false;
 		void SetValueActual(BindableProperty property, BindablePropertyContext context, object value, bool currentlyApplying, SetValueFlags attributes, bool silent = false)
 		{
 			object original = context.Value;
@@ -470,11 +473,17 @@ namespace Xamarin.Forms
 			bool clearTwoWayBindings = (attributes & SetValueFlags.ClearTwoWayBindings) != 0;
 
 			bool same = ReferenceEquals(context.Property, BindingContextProperty) ? ReferenceEquals(value, original) : Equals(value, original);
-			if (!silent && (!same || raiseOnEqual))
+			if (!silent && (!same || raiseOnEqual) && !_ignoreChange)
 			{
+				if (!same)
+					_ignoreChange = true;
 				property.PropertyChanging?.Invoke(this, original, value);
 
 				OnPropertyChanging(property.PropertyName);
+			}
+			else if (_ignoreChange)
+			{
+				_ignoreChange = false;
 			}
 
 			if (!same || raiseOnEqual)
